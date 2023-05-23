@@ -3,6 +3,7 @@ import LoginForm from './components/Login';
 import ShoppingCart from './components/ShoppingCart';
 import OrderHistory from './components/OrderHistory';
 import ProductList from './components/ProductList';
+import RegisterForm from './components/Register';
 // Dummy data
 const products = [
   { id: '1', name: 'Apple', price: 10, seller: 'Ram' },
@@ -17,14 +18,22 @@ const products = [
 
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = useState(null); 
+  const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [cartItems, setCartItems] = useState([]);
   const [orderHistory, setOrderHistory] = useState([]);
-  
+  const [showLoginForm, setShowLoginForm] = useState(false);
 
-  const handleLogin = (user) => {
-    setLoggedInUser(user);
+  const handleLogin = (email, password) => {
+    // Check if the email and password match a registered user
+    const user = registeredUsers.find(user => user.email === email && user.password === password);
+    if (user) {
+      setLoggedInUser(user);
+      console.log('Logged in:', user);
+    } else {
+      console.log('Invalid email or password');
+    }
   };
 
   const handleSearchInputChange = (event) => {
@@ -38,26 +47,24 @@ function App() {
   
   
   const handleRegister = (name, email, password) => {
-    // Perform validation and store the new user in the system
-    // Replace with your implementation logic
-    
-    // Create a new user object
     const newUser = {
       name: name,
       email: email,
       password: password,
-      // Add other relevant user information if needed
     };
   
-    // Perform validation of the user's registration details
-    // ...
+    // Check if the email is already registered
+    const existingUser = registeredUsers.find(user => user.email === email);
+    if (existingUser) {
+      console.log('Email already registered');
+      return;
+    }
   
-    // Store the new user in the system
-    // ...
-  
+    // Store the new user in the registeredUsers array
+    setRegisteredUsers([...registeredUsers, newUser]);
+    setShowLoginForm(true);
     console.log('New user registered:', newUser);
   };
-  
   
 
   
@@ -106,20 +113,31 @@ function App() {
 
   const calculateTotal = (cartItems) => {
     return cartItems.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
+      (total, item) => total + item.product.price * item.quantity, 0
     );
   };
 
+
   return (
-    <div className="App">
-      <h1>Online Marketplace</h1>
-      {!loggedInUser ? (
-        <LoginForm onLogin={handleLogin} onRegister={handleRegister} />
+      <div className="App">
+     <h1>Online Marketplace</h1>
+      {!loggedInUser && !showLoginForm ? (
+        <>
+          <h1>Please Register Yourself!</h1>
+          <RegisterForm onRegister={handleRegister} />
+        </>
       ) : (
         <>
-          <h2>Welcome, {loggedInUser.email}!</h2>
-            <input
+          {!loggedInUser && showLoginForm && (
+            <>
+              <h1>Login</h1>
+              <LoginForm onLogin={handleLogin} />
+            </>
+          )}
+          {loggedInUser && (
+            <>
+              <h2>Welcome, {loggedInUser.email}!</h2>
+              <input
           type="text"
           value={searchQuery}
           onChange={handleSearchInputChange}
@@ -135,6 +153,8 @@ function App() {
             onCheckout={checkout}
           />
           <OrderHistory orderHistory={orderHistory} />
+          </>
+          )}
         </>
       )}
     </div>

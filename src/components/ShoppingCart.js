@@ -8,14 +8,16 @@ function ShoppingCart({ cartItems, onCheckout }) {
     const handleShippingAddressChange = (e) => {
       setShippingAddress(e.target.value);
     };
-    const cartTotal = cartItems.reduce(
-        (total, item) => total + item.quantity * item.product.price,
-        0
-      );
-  
+
     const handlePaymentInfoChange = (e) => {
       setPaymentInfo(e.target.value);
     };
+    
+    const cartTotal = cartItems.reduce(
+        (total, item) => total + item.quantity * item.product.price, 0
+      );
+  
+    
   
     const handleCheckout = () => {
       if (shippingAddress.trim() === '' || paymentInfo.trim() === '') {
@@ -69,7 +71,7 @@ function ShoppingCart({ cartItems, onCheckout }) {
               />
             </label>
             <button onClick={handleCheckout}>Place Order</button>
-            {orderConfirmed && <p>Order confirmed. Thank you!</p>}
+            {/* {orderConfirmed && <p>Order confirmed. Thank you!</p>} */}
           </div>
         )}
       </div>

@@ -10,7 +10,7 @@ function OrderHistory({ orderHistory }) {
           <ul>
             {orderHistory.map((order) => (
               <li key={order.orderId}>
-                Order ID: {order.orderId}, Total: ${order.total}
+                Order ID: {order.orderId}, Total Cost: ${order.total}
               </li>
             ))}
           </ul>
