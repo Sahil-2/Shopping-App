@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 function ShoppingCart({ cartItems, onCheckout }) {
     const [shippingAddress, setShippingAddress] = useState('');
     const [paymentInfo, setPaymentInfo] = useState('');
-    const [orderConfirmed, setOrderConfirmed] = useState(false);
-  
+    const [error, setError] = useState(null);
     const handleShippingAddressChange = (e) => {
       setShippingAddress(e.target.value);
     };
@@ -21,20 +20,12 @@ function ShoppingCart({ cartItems, onCheckout }) {
   
     const handleCheckout = () => {
       if (shippingAddress.trim() === '' || paymentInfo.trim() === '') {
-        // Display an error message or perform validation as needed
+        setError('Please fill in all fields');
         return;
       }
-  
-      // Perform order placement logic here (e.g., API call)
-  
-      // Mark the order as confirmed
-      setOrderConfirmed(true);
-  
-      // Clear the form inputs and cart items
       setShippingAddress('');
       setPaymentInfo('');
-  
-      // Invoke the callback function to handle order placement
+      
       onCheckout();
     };
   
@@ -71,7 +62,7 @@ function ShoppingCart({ cartItems, onCheckout }) {
               />
             </label>
             <button onClick={handleCheckout}>Place Order</button>
-            {/* {orderConfirmed && <p>Order confirmed. Thank you!</p>} */}
+            {error && <p style={{ fontWeight: 'bold', marginLeft: '180px'}}>{error}</p>}
           </div>
         )}
       </div>

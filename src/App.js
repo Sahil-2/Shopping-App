@@ -19,20 +19,40 @@ const products = [
 
 function App() {
   const [registeredUsers, setRegisteredUsers] = useState([]);
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [cartItems, setCartItems] = useState([]);
   const [orderHistory, setOrderHistory] = useState([]);
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleRegister = (name, email, password) => {
+    const newUser = {
+      name: name,
+      email: email,
+      password: password,
+    };
+  
+    const existingUser = registeredUsers.find(user => user.email === email);
+    if (existingUser) {
+      console.log('Email already registered');
+      return;
+    }
+  
+    setRegisteredUsers([...registeredUsers, newUser]);
+    setShowLoginForm(true);
+    console.log('New user registered:', newUser);
+  };
+  
 
   const handleLogin = (email, password) => {
-    // Check if the email and password match a registered user
+
     const user = registeredUsers.find(user => user.email === email && user.password === password);
     if (user) {
       setLoggedInUser(user);
       console.log('Logged in:', user);
     } else {
-      console.log('Invalid email or password');
+      setError('Invalid email or password');
     }
   };
 
@@ -44,38 +64,13 @@ function App() {
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  
-  
-  const handleRegister = (name, email, password) => {
-    const newUser = {
-      name: name,
-      email: email,
-      password: password,
-    };
-  
-    // Check if the email is already registered
-    const existingUser = registeredUsers.find(user => user.email === email);
-    if (existingUser) {
-      console.log('Email already registered');
-      return;
-    }
-  
-    // Store the new user in the registeredUsers array
-    setRegisteredUsers([...registeredUsers, newUser]);
-    setShowLoginForm(true);
-    console.log('New user registered:', newUser);
-  };
-  
-
-  
-
   const addToCart = (product) => {
     const existingCartItem = cartItems.find((item) => 
       item.product.id === product.id
     );
 
     if (existingCartItem) {
-      // If the product is already in the cart, update the quantity
+
       const updatedCartItems = cartItems.map((item) => {
         if (item.product.id === product.id) {
           return {
@@ -87,7 +82,7 @@ function App() {
       });
       setCartItems(updatedCartItems);
     } else {
-      // If the product is not in the cart, add it with quantity 1
+
       setCartItems([...cartItems, { product, quantity: 1 }]);
     }
   };
@@ -95,18 +90,17 @@ function App() {
   
 
   const checkout = () => {
-    // Perform checkout process
-    // ...
+  
+    
 
-    // Clear the cart
-    setCartItems([]);
-
-    // Update the order history
+    
     const newOrder = {
       orderId: Math.floor(Math.random() * 1000), // Generate a random order ID
       total: calculateTotal(cartItems),
     };
     setOrderHistory([...orderHistory, newOrder]);
+    console.log(orderHistory)
+    setCartItems([]);
   };
 
   
@@ -132,6 +126,7 @@ function App() {
             <>
               <h1>Login</h1>
               <LoginForm onLogin={handleLogin} />
+              {error && <p style={{ fontWeight: 'bold', marginLeft: '60px'}}>{error}</p>}
             </>
           )}
           {loggedInUser && (

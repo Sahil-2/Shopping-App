@@ -1,15 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function ProductList({ products, handleAddToCart }) {
-  // const [searchQuery] = useState('');
-
-  
-
-  // // Filter products based on search query
-  // const filteredProducts = products.filter((product) => {
-  //   console.log(searchQuery.toLowerCase());
-  //   return product.name.toLowerCase().includes(searchQuery.toLowerCase());
-  // });
 
   return (
     <div>

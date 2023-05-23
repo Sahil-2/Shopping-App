@@ -14,7 +14,6 @@ function LoginForm({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Call the onLogin function with the provided email and password
     onLogin(email, password);
   };
 

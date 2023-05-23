@@ -4,6 +4,7 @@ function RegisterForm({ onRegister }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -19,8 +20,16 @@ function RegisterForm({ onRegister }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Call the onRegister function with the provided name, email, and password
+
+    if (name.trim() === '' || email.trim() === '' || password.trim() === '') {
+      setError('Please fill in all fields');
+      return;
+    }
     onRegister(name, email, password);
+    setName('');
+    setEmail('');
+    setPassword('');
+    setError(null);
   };
 
   return (
@@ -41,6 +50,7 @@ function RegisterForm({ onRegister }) {
       </label>
       <br />
       <button type="submit" style={{ fontWeight: 'bold', marginLeft: '120px'}}>Register</button>
+      {error && <p style={{ fontWeight: 'bold', marginLeft: '80px'}}>{error}</p>}
     </form>
   );
 }
